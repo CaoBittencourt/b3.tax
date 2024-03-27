@@ -1,2 +1,2 @@
 # b3.tax
- Tidy financial tax reports
+ Tidy Financial Tax Reports

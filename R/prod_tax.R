@@ -11,23 +11,29 @@ fun_b3_tax_data <- function(
 
   # position at the closing of the year
   df_position %>%
+    mutate(
+      .before = 1
+      , year =
+        year(date)
+    ) %>%
+    select(
+      -date
+    ) %>%
     filter(
-      year(date) ==
+      year == c(
+        int_year - 1,
         int_year
+      )
     ) %>%
     group_by(
+      year,
       ticker
     ) %>%
     slice(n()) %>%
-    mutate(
-      date = as_date(
-        paste0(
-          int_year,
-          '-12-31'
-        )
-      )
-    ) %>%
     ungroup() %>%
+    filter(
+      position > 0
+    ) %>%
     arrange(desc(
       value
     )) ->
@@ -89,6 +95,59 @@ fun_b3_tax_report <- function(list_tax_data){
       df_position_cat
     ) -> df_position_report
 
+  # dynamic description
+  df_position_report %>%
+    mutate(
+      text = paste0(
+        'Ao final do ano de '
+        , year
+        , ', eu tinha '
+        , position
+        , ' '
+        , ticker
+        , ', com preço médio de '
+        , dollar(
+          mean_price
+          , prefix = 'R$'
+          , big.mark = '.'
+          , decimal.mark = ','
+          , suffix = ', '
+        )
+        , 'totalizando '
+        , dollar(
+          value
+          , prefix = 'R$'
+          , big.mark = '.'
+          , decimal.mark = ','
+          , suffix = '.'
+        )
+      )
+    ) %>%
+    arrange(
+      year
+    ) %>%
+    group_by(
+      ticker
+    ) %>%
+    mutate(
+      text = paste(
+        text
+        , collapse = ' '
+      )
+    ) %>%
+    ungroup() %>%
+    mutate(
+      text = if_else(
+        year == max(year)
+        , text
+        , ''
+      )
+    ) %>%
+    arrange(
+      ticker,
+      year
+    ) -> df_position_report
+
   # dividends report
   list_tax_data$
     dividends_tax %>%
@@ -108,10 +167,7 @@ fun_b3_tax_report <- function(list_tax_data){
 
 }
 
-
 # daytrolha
-
-
 
 # - Tax report main function ---------------------------------------------------
 fun_b3_tax_main <- function(
@@ -178,17 +234,3 @@ fun_b3_tax_main <- function(
   ))
 
 }
-
-
-# # - dsds ------------------------------------------------------------------
-# fun_b3_tax_report(
-#   df_position =
-#     list_position$
-#     position
-#   , df_daytrolha_year =
-#     list_daytrolha$
-#     daytrolha_year
-#   , df_dividends_year =
-#     list_dividends$
-#     dividends_year
-# )

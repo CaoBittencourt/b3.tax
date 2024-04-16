@@ -1,11 +1,11 @@
-Package: b3.tax
+¨Package: b3.tax
 Type: Package
 Title: Tidy Financial Tax Reports
-Version: 1.2.1
+Version: 1.3.0
 Author: Cao Bittencourt
 Maintainer: Cao Bittencourt <caobittencourt@gmail.com>
 Description: Automate tax reports with B3's financial data.
-Depends: dplyr, tidyr, lubridate, b3.data, b3.stats
+Depends: dplyr, tidyr, lubridate, b3.data, b3.stats, scales
 Remotes: github::caobittencourt/b3.data, github::caobittencourt/b3.stats 
 License: What license is it under?
 Encoding: UTF-8

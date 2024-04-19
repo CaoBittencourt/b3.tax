@@ -38,6 +38,13 @@ fun_b3_tax_data <- function(
     ) %>%
     slice(n()) %>%
     ungroup() %>%
+    group_by(
+      ticker
+    ) %>%
+    filter(!all(
+      position == 0
+    )) %>%
+    ungroup() %>%
     arrange(desc(
       value
     )) -> df_position_tax

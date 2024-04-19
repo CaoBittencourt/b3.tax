@@ -19,6 +19,13 @@ fun_b3_tax_data <- function(
     select(
       -date
     ) %>%
+    group_by(
+      ticker
+    ) %>%
+    filter(any(
+      year == int_year
+    )) %>%
+    ungroup() %>%
     filter(
       year %in% c(
         int_year - 1,

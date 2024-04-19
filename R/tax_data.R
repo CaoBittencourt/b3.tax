@@ -20,7 +20,7 @@ fun_b3_tax_data <- function(
       -date
     ) %>%
     filter(
-      year == c(
+      year %in% c(
         int_year - 1,
         int_year
       )
@@ -31,24 +31,18 @@ fun_b3_tax_data <- function(
     ) %>%
     slice(n()) %>%
     ungroup() %>%
-    filter(
-      position > 0
-    ) %>%
     arrange(desc(
       value
-    )) ->
-    df_position_tax
+    )) -> df_position_tax
 
   # total dividends in the year
-  list_dividends$
-    dividends_year %>%
+  df_dividends_year %>%
     filter(
       year == int_year
     ) -> df_dividends_tax
 
   # total daytrolha in the year
-  list_daytrolha$
-    daytrolha_year %>%
+  df_daytrolha_year %>%
     filter(
       year == int_year
     ) -> df_daytrolha_tax

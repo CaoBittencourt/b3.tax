@@ -17,3 +17,4 @@ tibble(
   category_desc = c('03 - Participações Societárias', '04 - Aplicações e Investimentos'),
   subcategory_desc = c('01 - Ações (inclusive as listadas em bolsa)', '02 - Títulos públicos e privados sujeitos à tributação (Tesouro Direto, CDB, RDB e Outros)')
 ) -> df_position_cat
+

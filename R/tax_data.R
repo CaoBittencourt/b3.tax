@@ -10,12 +10,12 @@ fun_b3_tax_data <- function(
 
   # position at the closing of the year
   df_position |>
-    anti_join(
-      df_position_now
-    ) |>
     group_by(ticker) |>
     filter(
       last(position) != 0
+    ) |>
+    filter(
+      year(date) < int_year
     ) |>
     slice(n()) |>
     ungroup() |>
@@ -24,7 +24,7 @@ fun_b3_tax_data <- function(
       year = as.integer(int_year - 1)
     ) |>
     bind_rows(
-      df_position_now |>
+      list_position$position_now |>
         mutate(
           .before = 1,
           year = as.integer(int_year)

@@ -1,7 +1,6 @@
 # [FUNCTIONS] -------------------------------------------------------------
 # - Dynamic tax report (assets) ----------------------------------------------------
-fun_b3_tax_report_assets <- function(list_tax_data){
-
+fun_b3_tax_report_assets <- function(list_tax_data) {
   # arguments validation
 
   # position report
@@ -15,27 +14,27 @@ fun_b3_tax_report_assets <- function(list_tax_data){
   df_position_report %>%
     mutate(
       text = paste0(
-        'Ao final do ano de '
-        , year
-        , ', eu tinha '
-        , position
-        , ' '
-        , ticker
-        , ', com preço médio de '
-        , dollar(
-          mean_price
-          , prefix = 'R$'
-          , big.mark = '.'
-          , decimal.mark = ','
-          , suffix = ', '
-        )
-        , 'totalizando '
-        , dollar(
-          value
-          , prefix = 'R$'
-          , big.mark = '.'
-          , decimal.mark = ','
-          , suffix = '.'
+        "Ao final do ano de ",
+        year,
+        ", eu tinha ",
+        position,
+        " ",
+        ticker,
+        ", com preço médio de ",
+        dollar(
+          mean_price,
+          prefix = "R$",
+          big.mark = ".",
+          decimal.mark = ",",
+          suffix = ", "
+        ),
+        "totalizando ",
+        dollar(
+          value,
+          prefix = "R$",
+          big.mark = ".",
+          decimal.mark = ",",
+          suffix = "."
         )
       )
     ) %>%
@@ -47,16 +46,16 @@ fun_b3_tax_report_assets <- function(list_tax_data){
     ) %>%
     mutate(
       text = paste(
-        text
-        , collapse = ' '
+        text,
+        collapse = " "
       )
     ) %>%
     ungroup() %>%
     mutate(
       text = if_else(
-        year == max(year)
-        , text
-        , ''
+        year == max(year),
+        text,
+        ""
       )
     ) %>%
     arrange(
@@ -66,12 +65,10 @@ fun_b3_tax_report_assets <- function(list_tax_data){
 
   # output
   return(df_position_report)
-
 }
 
 # - Dynamic tax report (dividends) ----------------------------------------------------
-fun_b3_tax_report_dividends <- function(list_tax_data){
-
+fun_b3_tax_report_dividends <- function(list_tax_data) {
   # arguments validation
 
   # dividends report
@@ -83,39 +80,45 @@ fun_b3_tax_report_dividends <- function(list_tax_data){
 
   # output
   return(df_dividends_report)
-
 }
 
 # - Tax report main function ---------------------------------------------------
 fun_b3_tax_report <- function(
     df_position,
+    df_position_now,
     df_daytrolha_year,
     df_dividends_year,
-    int_year = year(Sys.Date()) - 1
-){
-
+    int_year = year(Sys.Date()) - 1) {
   # arguments validation
   stopifnot(
     "'df_position' must be a data frame with the 'df_position' subclass." =
       all(
-        is.data.frame(df_position)
-        , any(class(df_position) == 'df_position')
+        is.data.frame(df_position),
+        any(class(df_position) == "df_position")
+      )
+  )
+
+  stopifnot(
+    "'df_position_now' must be a data frame with the 'df_position_now' subclass." =
+      all(
+        is.data.frame(df_position_now),
+        any(class(df_position_now) == "df_position_now")
       )
   )
 
   stopifnot(
     "'df_daytrolha_year' must be a data frame with the 'df_daytrolha_year' subclass." =
       all(
-        is.data.frame(df_daytrolha_year)
-        , any(class(df_daytrolha_year) == 'df_daytrolha_year')
+        is.data.frame(df_daytrolha_year),
+        any(class(df_daytrolha_year) == "df_daytrolha_year")
       )
   )
 
   stopifnot(
     "'df_dividends_year' must be a data frame with the 'df_dividends_year' subclass." =
       all(
-        is.data.frame(df_dividends_year)
-        , any(class(df_dividends_year) == 'df_dividends_year')
+        is.data.frame(df_dividends_year),
+        any(class(df_dividends_year) == "df_dividends_year")
       )
   )
 
@@ -143,26 +146,26 @@ fun_b3_tax_report <- function(
   list(
     assets = fun_b3_tax_report_assets,
     dividends = fun_b3_tax_report_dividends
-    #,daytrolha = fun_b3_tax_report_daytrolha
+    # ,daytrolha = fun_b3_tax_report_daytrolha
   ) %>%
     lapply(
-      function(fun_report){
+      function(fun_report) {
         tryCatch(
           expr = {
             do.call(
-              fun_report
-              , list(list_tax_data)
+              fun_report,
+              list(list_tax_data)
             )
-          }, error = function(e){NULL}
+          }, error = function(e) {
+            NULL
+          }
         )
       }
     ) -> list_tax_report
 
   # output
   return(list(
-    'data' = list_tax_data,
-    'report' = list_tax_report
+    "data" = list_tax_data,
+    "report" = list_tax_report
   ))
-
 }
-
